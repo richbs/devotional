@@ -81,12 +81,15 @@ def remove_border_background(img, safe_rect):
     return rgba
 
 
-def make_edge_fade_mask(w, h, fade):
+def make_edge_fade_mask(w, h, fade, skip_side=None):
+    """skip_side='left'|'right' leaves that edge fully opaque (no fade)."""
     mask = np.ones((h, w), dtype=np.float32)
     for i in range(fade):
         t = i / fade
-        mask[:, i] *= t
-        mask[:, w - 1 - i] *= t
+        if skip_side != "left":
+            mask[:, i] *= t
+        if skip_side != "right":
+            mask[:, w - 1 - i] *= t
         mask[i, :] *= t
         mask[h - 1 - i, :] *= t
     return (mask * 255).astype(np.uint8)
@@ -125,18 +128,35 @@ def add_shadow_and_fade(img_rgba, seam=None):
             shadow_layer_arr[pad:pad + h, pad:pad + w, 3] = content_alpha
             shadow_layer = Image.fromarray(shadow_layer_arr)
 
-    fade_mask = make_edge_fade_mask(cw, ch, FADE_WIDTH)
+    fade_mask = make_edge_fade_mask(cw, ch, FADE_WIDTH, skip_side=seam)
     r, g, b, a = shadow_layer.split()
     a_arr = np.array(a, dtype=np.float32) * np.array(fade_mask, dtype=np.float32) / 255.0
     shadow_layer.putalpha(Image.fromarray(a_arr.astype(np.uint8)))
 
+    # Crop the seam-side padding entirely so the edge is flush with no gap
+    if seam == "right":
+        shadow_layer = shadow_layer.crop((0, 0, cw - pad, ch))
+    elif seam == "left":
+        shadow_layer = shadow_layer.crop((pad, 0, cw, ch))
+
     return shadow_layer
+
+
+def tight_page(img_rgba, seam=None):
+    """No shadow, no padding — just a feathered edge. Seam side stays flush."""
+    w, h = img_rgba.size
+    fade_mask = make_edge_fade_mask(w, h, FADE_WIDTH, skip_side=seam)
+    r, g, b, a = img_rgba.split()
+    a_arr = np.array(a, dtype=np.float32) * np.array(fade_mask, dtype=np.float32) / 255.0
+    result = img_rgba.copy()
+    result.putalpha(Image.fromarray(a_arr.astype(np.uint8)))
+    return result
 
 
 # DB-01 is a centred cover image — skip it
 SKIP = {"DB-01.png"}
 
-SPREAD_DIR = os.path.join(SRC_DIR, "spread")
+SPREAD_DIR = os.path.join(SRC_DIR, "complex", "spread")
 os.makedirs(SPREAD_DIR, exist_ok=True)
 
 files = sorted(f for f in os.listdir(SRC_DIR) if f.endswith(".png") and f not in SKIP)
@@ -164,7 +184,7 @@ for fname in files:
     mid = keyed.width // 2
     for side, seam, half in (("L", "right", keyed.crop((0, 0, mid, keyed.height))),
                               ("R", "left",  keyed.crop((mid, 0, keyed.width, keyed.height)))):
-        page = add_shadow_and_fade(half, seam=seam)
+        page = tight_page(half, seam=seam)
         page.save(os.path.join(SPREAD_DIR, f"{stem}-{side}.png"))
 
     print(f"{fname} -> spread + L/R pages")

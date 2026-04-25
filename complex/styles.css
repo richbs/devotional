@@ -1,0 +1,50 @@
+main {
+    display: flex;
+    margin:0;
+    overflow: hidden;
+    display
+}
+body {
+        background-color: rgb(244, 244, 221);
+            width: 1280;
+            height: 1024;
+    margin:0;
+    padding:0;
+    font-size: 24px;
+}
+
+header {
+    height: 100px;
+    background-color: chocolate;
+    font-size: 72px;
+    color: whitesmoke;
+    line-height: 100px;
+    padding: 0 0 0 20px;
+}
+
+  
+
+article {
+    flex: 7;
+    margin: 15px;
+}
+
+aside {
+    display:inline-block;
+    flex:3;
+    margin: 15px;
+    font-size: 32px;
+}
+nav {
+    display: flex;
+}
+
+nav a {
+    flex: 1;
+    font-size: 64;
+    display: block;
+    text-align: center;
+    padding-top: 20px;
+    color: #444;
+    text-decoration: none;
+}
