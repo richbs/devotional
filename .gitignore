@@ -1,0 +1,4 @@
+node_modules/
+cropped/
+__pycache__/
+*.pyc
