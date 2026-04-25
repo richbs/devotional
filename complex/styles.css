@@ -1,16 +1,20 @@
+body {
+    margin:0;
+    padding: 0;
+}
 main {
     display: flex;
     margin:0;
-    overflow: hidden;
     display
 }
-body {
-        background-color: rgb(244, 244, 221);
-            width: 1280;
-            height: 1024;
+.wrapper {
+    width: 1280;
+    height: 1024;
+    background-color: rgb(244, 244, 221);
     margin:0;
     padding:0;
     font-size: 24px;
+    overflow: hidden;
 }
 
 header {
