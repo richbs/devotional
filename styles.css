@@ -1,0 +1,22 @@
+main {
+    background-color: rgb(244, 244, 221);
+    width: 1280;
+    height: 1024;
+    margin:0;
+    overflow: hidden;
+}
+body {
+    margin:0;
+    padding:0;
+}
+nav {
+    display: flex;
+}
+
+nav a {
+    flex:1;
+    font-size: 64;
+    display: block;
+    text-align: center;
+    vertical-align: middle;
+}
