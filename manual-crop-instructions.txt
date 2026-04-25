@@ -1,0 +1,123 @@
+Manual Background Removal with Shadow & Edge Fade
+==================================================
+Replicating the crop_pages.py effect in Photoshop or GIMP.
+
+
+STEP 1: CROP THE IMAGE
+-----------------------
+- Open the source image
+- Use the Crop tool to remove the title text, bottom label, and right-side
+  description text, leaving just the book page spread with some background
+  border around it
+
+
+STEP 2: SELECT THE BACKGROUND (Color Range)
+--------------------------------------------
+Photoshop:
+  Select > Color Range
+  - Click on the tan background area
+  - Set Fuzziness to around 30-40
+  - Hold Shift and click additional background spots to catch the gradient
+    (the background is darker top-left, lighter bottom-right)
+  - Preview the selection — make sure it hasn't eaten into the artwork
+  - Click OK
+
+GIMP:
+  Select > By Color
+  - Set Threshold to around 30-35
+  - Click on the tan background
+  - Hold Shift and click other background tones to add to selection
+
+
+STEP 3: PROTECT THE SAFE AREA
+-------------------------------
+This is the key step — prevent the selection from touching the artwork.
+
+Photoshop:
+  - Switch to Quick Mask mode (Q)
+  - Use a large hard brush set to white (which removes from mask/selection)
+  - Paint over the entire book spread area to deselect it
+  - Switch back to normal mode (Q)
+  - The selection should now only cover the outer background border
+
+GIMP:
+  - Select > Toggle Quick Mask
+  - Paint white over the book spread area to protect it
+  - Toggle Quick Mask off
+
+Alternatively (both apps):
+  - Use the Rectangle Select tool to select the inner book area
+  - Subtract it from your color-based selection (hold Alt/Ctrl)
+
+
+STEP 4: FEATHER & DELETE THE BACKGROUND
+-----------------------------------------
+Photoshop:
+  - Select > Modify > Feather: 2-3 px (softens the edge)
+  - Make sure your layer is unlocked (double-click Background layer)
+  - Press Delete — the background becomes transparent
+
+GIMP:
+  - Select > Feather: 2-3 px
+  - Add an Alpha Channel (Layer > Transparency > Add Alpha Channel)
+  - Press Delete
+
+
+STEP 5: ADD THE DROP SHADOW
+-----------------------------
+Photoshop:
+  - Layer > Layer Style > Drop Shadow
+  - Blend Mode: Multiply
+  - Color: Black
+  - Opacity: ~45%
+  - Angle: ~135 degrees (bottom-right)
+  - Distance: 8 px
+  - Spread: 0
+  - Size: 15 px (this is the blur)
+
+GIMP:
+  - Filters > Light and Shadow > Drop Shadow
+  - Offset X: 8, Offset Y: 8
+  - Blur Radius: 15
+  - Color: Black
+  - Opacity: ~45%
+
+
+STEP 6: ADD THE EDGE FADE (VIGNETTE)
+--------------------------------------
+This fades the entire composite (artwork + shadow) to transparent at the
+canvas edges.
+
+Photoshop:
+  - Add a Layer Mask to a group containing all layers
+  - Select the mask, then Select All (Ctrl+A)
+  - Select > Modify > Contract: 25 px
+  - Select > Modify > Feather: 25 px
+  - Fill the mask with black, then fill the selection with white
+  - This creates a soft transparent falloff at the edges
+
+GIMP:
+  - Flatten visible to a new layer
+  - Add Alpha Channel
+  - Select All, then Select > Shrink by 25 px
+  - Select > Feather by 25 px
+  - Select > Invert
+  - Delete (fades edges to transparent)
+
+
+STEP 7: EXPORT
+---------------
+- File > Export As / Save As
+- Choose PNG format (preserves transparency)
+- Make sure "Transparency" or "Alpha" is checked
+
+
+TIPS
+----
+- If Color Range selects too much of the artwork, reduce Fuzziness/Threshold
+- If background remnants remain, Shift+click them to add to the selection
+- The faded/greyed-out pages have similar tones to the background — use the
+  safe area / Quick Mask technique to protect them
+- For batch processing in Photoshop, record the steps as an Action and use
+  File > Automate > Batch
+- For batch in GIMP, use Script-Fu or the BIMP plugin
