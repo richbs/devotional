@@ -39,7 +39,6 @@ main {
     aspect-ratio: 1280 / 904;
     min-height: 904px;
     overflow: hidden;
-    background: #111;
     cursor: pointer;
 }
 
@@ -56,12 +55,12 @@ main {
 .leaf.fader {
     display: block;
     opacity: 0;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.6s ease;
 }
 
 .leaf.active {
     display: block;
-    pointer-events: auto;
+    pointer-events: none;
     view-transition-name: page;     /* captured by VT; see keyframes below */
 }
 
@@ -230,7 +229,6 @@ nav button.active { color: #fff; }
     position: fixed;
     inset: 0;
     z-index: 9000;
-    background: #000;
     cursor: pointer;
     overflow: hidden;
 }
@@ -243,4 +241,41 @@ nav button.active { color: #fff; }
     object-fit: cover;
     opacity: 0;
     transition: opacity 0.8s ease;  /* driven by inline opacity set in script.js */
+}
+
+
+/* Stop browser defaults states from appearing during interactions */
+
+/* Prevent image darkening on click or tap */
+img,
+button img,
+a img {
+    -webkit-tap-highlight-color: transparent;
+    /* removes mobile highlight */
+    -webkit-user-select: none;
+    /* optional: prevents accidental selection */
+    user-select: none;
+}
+
+img:active,
+button:active img,
+a:active img {
+    opacity: 1;
+    /* cancels the default dimming */
+    filter: none;
+    /* ensures no darkening filter is applied */
+}
+
+/* Global focus style reset for Chromium 87+ */
+:focus-visible {
+    outline: none;
+}
+
+/* Optional: remove default focus ring for mouse clicks only */
+button:focus:not(:focus-visible),
+a:focus:not(:focus-visible),
+input:focus:not(:focus-visible),
+select:focus:not(:focus-visible),
+textarea:focus:not(:focus-visible) {
+    outline: none;
 }
