@@ -132,9 +132,9 @@ updateDot(0);
 
 
 // ─── Idle timeout overlay ────────────────────────────────────────────────────
-// Full-viewport overlay styled in styles.css (.timeout / .timeout__image).
+// Full-viewport overlay styled in styles.css (.timeout / .timeout-image).
 // Two stacked <img> layers crossfade via inline opacity; CSS transition handles
-// the animation (transition: opacity 0.8s ease on .timeout__image).
+// the animation (transition: opacity 0.8s ease on .timeout-image).
 // Appended to <body> (not inside <main>) so it sits above everything.
 
 const IDLE_TIMEOUT_MS = 120000;  // ms before overlay appears; 0 = disabled
@@ -147,8 +147,8 @@ overlay.hidden = true;
 
 const layerA = document.createElement("img");
 const layerB = document.createElement("img");
-layerA.className = "timeout__image";
-layerB.className = "timeout__image";
+layerA.className = "timeout-image";
+layerB.className = "timeout-image";
 layerA.alt = layerB.alt = "";
 overlay.append(layerA, layerB);
 document.body.appendChild(overlay);
