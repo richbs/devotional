@@ -10,18 +10,17 @@
 
 body {
   align-items: center;
-  background: rgb(193 169 141);
+  background-color: rgb(145 113 82);
   color: rgb(145 113 82);
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
 }
 
 main {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
+  aspect-ratio: 1280 / 1024;
+  background: rgb(193 169 141);
   max-width: 1280px;
+  position: relative;
   width: 100%;
 }
 
@@ -34,8 +33,6 @@ main {
 #pages {
   aspect-ratio: 1280 / 904;
   cursor: pointer;
-  flex: none;
-  min-height: 904px;
   overflow: hidden;
   position: relative;
   width: 100%;
@@ -131,7 +128,6 @@ html:active-view-transition-type(backward)::view-transition-new(page) {
 nav {
   align-items: center;
   display: grid;
-  flex: 1;
   grid-template-columns: 1fr auto 1fr; /* equal sides keep .jumps centred */
   margin-top: 4px;
   min-height: 110px;
@@ -230,6 +226,10 @@ nav button.active {
   border-radius: 50%;
   height: 20px;
   left: 0;
+  outline: 3px solid #fff;
+  
+  /* pull outline inward */
+  outline-offset: -3px;
   pointer-events: none;
   position: absolute;
   top: 50%;
@@ -272,16 +272,18 @@ nav button.active {
 
 /* ─── Idle timeout overlay ───────────────────────────────────────────────── */
 
-/* Div appended to <body> by script.js. Contains two .timeout-image layers
+/* Div appended to <main> by script.js. Contains two .timeout-image layers
    (A and B) whose opacity is toggled inline by script.js to crossfade.
    The CSS transition here does the actual animation. */
 
 .timeout {
+  align-items: center;
+  aspect-ratio: 1280 / 1024;
   background: rgb(193 169 141);
   cursor: pointer;
   inset: 0;
   overflow: hidden;
-  position: fixed;
+  position: absolute;
   z-index: 9000;
 }
 
@@ -313,8 +315,6 @@ a:active img {
   /* cancels the default dimming */
   filter: none;
   opacity: 1;
-
-  /* ensures no darkening filter is applied */
 }
 
 /* Global focus style reset for Chromium 87+ */

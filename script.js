@@ -24,9 +24,8 @@ slides.forEach((src, i) => {
     img.className = "leaf" + (i === 0 ? " active" : "");
     img.src = src;
     img.alt = "";
-    if (!document.startViewTransition) {
-      img.classList.add("fader");
-    }
+    img.classList.add("fader");
+
     pagesEl.appendChild(img);
 });
 
@@ -132,10 +131,10 @@ updateDot(0);
 
 
 // ─── Idle timeout overlay ────────────────────────────────────────────────────
-// Full-viewport overlay styled in styles.css (.timeout / .timeout-image).
+// App-sized overlay styled in styles.css (.timeout / .timeout-image).
 // Two stacked <img> layers crossfade via inline opacity; CSS transition handles
 // the animation (transition: opacity 0.8s ease on .timeout-image).
-// Appended to <body> (not inside <main>) so it sits above everything.
+// Appended to <main> so it fits the 4/3 application container.
 
 const IDLE_TIMEOUT_MS = 120000;  // ms before overlay appears; 0 = disabled
 const SLIDE_DURATION  = 8000;    // ms each timeout image is shown
@@ -151,7 +150,8 @@ layerA.className = "timeout-image";
 layerB.className = "timeout-image";
 layerA.alt = layerB.alt = "";
 overlay.append(layerA, layerB);
-document.body.appendChild(overlay);
+const main_element = document.getElementsByTagName('main')[0];
+main_element.appendChild(overlay);
 
 let cycleTimer    = null;
 let aActive       = true;
