@@ -24,8 +24,6 @@ slides.forEach((src, i) => {
     img.className = "leaf" + (i === 0 ? " active" : "");
     img.src = src;
     img.alt = "";
-    img.classList.add("fader");
-
     pagesEl.appendChild(img);
 });
 
@@ -93,6 +91,8 @@ function go(index) {
     const direction = index > current ? "forward" : "backward";
     const prev = current;
     current = index;
+    const isFade = document.body.classList.contains("page-fade");
+    const isOverlayActive = document.body.classList.contains("timeout-active");
 
     navPages[prev].classList.remove("active");
     navPages[index].classList.add("active");
@@ -104,10 +104,14 @@ function go(index) {
         leaves[index].classList.add("active");
     };
 
+    if (isFade || isOverlayActive) {
+        update();
+        return;
+    }
+
     if (!document.startViewTransition) { update(); return; }
 
-    const isFade = pagesEl.classList.contains("fade");
-    document.startViewTransition({ update, types: isFade ? ["fade"] : [direction] });
+    document.startViewTransition({ update, types: [direction] });
 }
 
 navPages.forEach((btn, i) => btn.addEventListener("click", () => go(i)));
@@ -143,6 +147,11 @@ const FADE_DURATION   = 500;     // ms — must be <= CSS transition duration
 const overlay = document.createElement("div");
 overlay.className = "timeout";
 overlay.hidden = true;
+// Stop clicking through the overlay and triggering slide
+overlay.addEventListener("click", (e) => {
+    e.stopPropagation();
+    hideOverlay();
+});
 
 const layerA = document.createElement("img");
 const layerB = document.createElement("img");
@@ -204,10 +213,9 @@ function resetIdleTimer() {
     idleTimer = setTimeout(showOverlay, IDLE_TIMEOUT_MS);
 }
 
-["mousedown", "touchstart", "keydown"].forEach((evt) => {
+["mousedown", "touchstart", "keydown", "click"].forEach((evt) => {
     window.addEventListener(evt, () => {
-        if (overlayActive) hideOverlay();
-        else resetIdleTimer();
+      resetIdleTimer();
     }, { passive: true });
 });
 
